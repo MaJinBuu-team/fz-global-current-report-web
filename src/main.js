@@ -6,13 +6,17 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import { Button } from 'element-ui';
+import ElementUI from 'element-ui';
+
+import 'element-ui/lib/theme-chalk/index.css'
+import './styles/index.scss' // global css
+import '@/icons' // icon
+import '@/permission' // permission control
 
 Vue.config.productionTip = false
 Vue.use(VueAxios,axios);
 
-
-Vue.component(Button.name, Button)
+Vue.use(ElementUI);
 
 /* eslint-disable no-new */
 new Vue({
