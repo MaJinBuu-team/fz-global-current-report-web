@@ -1,10 +1,11 @@
-import User from './pages/User';
+import login from './pages/login';
 
 export default [
   {
-    path: "/user/user",
-    name: "user.user",
-    component: User,
-    props: false
+    path: "/login",
+    name: "login",
+    component: login,
+    props: false,
+    hidden: true
   }
 ] 

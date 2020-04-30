@@ -3,7 +3,7 @@ import Report2 from './pages/Report2';
 
 export default [
   {
-    path: "/report/report1",
+    path: "/",
     name: "report.report1",
     component: Report1,
     props: false
