@@ -257,7 +257,7 @@ export default {
       this.$options.methods.handleGetParkingTotal.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
-        parkingId:"200002",
+        parkingId:"8D7B917E",
         page: 1,
         limit: 50
       });
@@ -266,12 +266,13 @@ export default {
       this.$options.methods.handleParkBusinessInfo.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
-        parkingId:"200002",
+        parkingId:"8D7B917E",
         page: this.currentPage,
         limit: this.pageSize
       })
     },
     goBack() {
+      
       this.$router.go(-1);
     },
     handleSizeChange(val) {
