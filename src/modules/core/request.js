@@ -1,14 +1,19 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
+// import reportsModule from './modules/reports/store'
+import userModule from '../../modules/user/store'
 import { getToken } from '@/modules/core/auth'
 
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
-  baseURL: "http://121.89.195.134:8084",
+  baseURL: "http://ic.tcps.com.cn:12980/report/",
   timeout: 5000 // request timeout
+
+  // http://121.89.195.134:8084
+  // http://ic.tcps.com.cn:12980/report/
 })
 
 // request interceptor
@@ -16,12 +21,13 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
 
-    if (store.getters.token) {
-      // let each request carry token
-      // ['Authorization'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['Authorization'] = getToken()
-    }
+    // if (userModule.getters.token) {
+    //   // let each request carry token
+    //   // ['Authorization'] is a custom headers key
+    //   // please modify it according to the actual situation
+    // }
+    config.headers['Authorization'] = getToken()
+    console.log('token=='+config.headers['Authorization']);
     return config
   },
   error => {
@@ -67,7 +73,8 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      // console.log(JSON.stringify(res));
+      return Promise.reject(JSON.stringify(res))
     } else {
       return res
     }

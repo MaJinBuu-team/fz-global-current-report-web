@@ -1,32 +1,37 @@
-import axios from 'axios'
 
-const state = {
-    count: 0,
-    text:""
-}
+import { scenicBusinessDetail, scenicBusinessTotal } from '@/modules/api/scenicBusiness'
+import tools from '../../core/tools'
+// const state = {
+//   count: 0,
+//   text: ""
+// }
 
-const mutations = {
-    increment (state) {
-      state.count++
-    },
-    dataInit(state,data){
-      state.text=data
-    }
-}
-
-const actions = {
-  dataInit(context){
-    axios.get('http://ic.tcps.com.cn:12001/test/test').then(res=>{
-      context.commit('dataInit',res.data)
-    }).catch(err=>{
-      console.log(err)
+const actions = {  
+  scenicBusinessDetail({ commit },paramDic){
+    console.log('scenicBusinessDetail入参：'+JSON.stringify(paramDic));
+    return new Promise((resolve, reject) => {
+      scenicBusinessDetail(paramDic).then(response => {
+        resolve(response)
+      }).catch(error => {
+        console.log("出错了：" + error);
+        reject(error)
+      })
+    })
+  },
+  scenicBusinessTotal({ commit },paramDic){
+    console.log('scenicBusinessTotal入参：'+JSON.stringify(paramDic));
+    return new Promise((resolve, reject) => {
+      scenicBusinessTotal(paramDic).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
     })
   }
 }
 
 export default {
-    namespaced: true,
-    state,
-    mutations,
-    actions
-  }
+  namespaced: true,
+  // state,
+  actions
+}

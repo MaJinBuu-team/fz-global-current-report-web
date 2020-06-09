@@ -1,6 +1,7 @@
 import { login, logout } from '@/modules/api/user'
 import { getToken, setToken, removeToken } from '@/modules/core/auth'
 import router from '@/router'
+import tools from '../../core/tools'
 
 const getDefaultState = () => {
   return {
@@ -35,9 +36,14 @@ const actions = {
       login({ loginName: username.trim(), loginPwd: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        localStorage.setItem("parkId",JSON.stringify(response.parkId))
+        localStorage.setItem("scenicId",JSON.stringify(response.scenicId))
+        console.log("登录返回"+JSON.stringify(data));
         setToken(data.token)
+        console.log('存储的token=='+data.token);
         resolve()
       }).catch(error => {
+        console.log(error);
         reject(error)
       })
     })

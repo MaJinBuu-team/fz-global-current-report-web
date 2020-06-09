@@ -1,5 +1,4 @@
 import login from './pages/login';
-
 export default [
   {
     path: "/login",
@@ -7,5 +6,5 @@ export default [
     component: login,
     props: false,
     hidden: true
-  }
+  },
 ] 
