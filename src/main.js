@@ -8,8 +8,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import ElementUI from 'element-ui';
 
+
 import 'element-ui/lib/theme-chalk/index.css'
-import './styles/index.scss' // global css
+import '@/styles/index.scss' // global css
 import '@/icons' // icon
 import '@/permission' // permission control
 
