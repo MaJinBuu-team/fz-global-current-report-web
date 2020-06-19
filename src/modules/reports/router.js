@@ -1,35 +1,27 @@
+import Layout from '@/modules/layout/pages/Layout'
 
-import Report2 from './pages/Report2';
-import RootContainer from './pages/RootContainer'
-import Report1Detail from './pages/Report1Detail'
-import Report2Detail from './pages/Report2Detail'
 export default [
   {
-    path: "/",
-    name: "report.rootContainer",
-    component: RootContainer,
-    props: false,
+    path: '/reports',
+    component: Layout,
+    redirect: '/reports/parking',
+    name: '报表',
+    meta: { title: '报表', icon: 'example' },
     children: [
       {
-        path: "/report1Detail",
-        name: "report1Detail",
-        component: Report1Detail,
-        props: false
+        path: 'parking',
+        name: 'Parking',
+        component: () => import('./pages/Parking'),
+        meta: { title: '停车费用报表', icon: 'table' }
       },
       {
-        path: "/report2",
-        name: "report2",
-        component: Report2,
-        props: false
-      },
-      {
-        path: "/report2Detail",
-        name: "report2Detail",
-        component: Report2Detail,
-        props: false
+        path: 'ticket',
+        name: 'Ticket',
+        component: () => import('./pages/Ticket'),
+        meta: { title: '售票报表', icon: 'tree' }
       }
     ]
-  },
+  }
   
 ] 
 

@@ -1,5 +1,5 @@
 <template>
-  <div id="report1Detail">
+  <div id="parking">
     <el-table
       :data="tableData"
       stripe
@@ -39,25 +39,20 @@
                 <!-- <el-button type="success" size="mini" id="queryBtn">导出Excel表</el-button> -->
               </el-col>
               <el-col :span="12" :offset="4" class="flex-row-space-around">
-                <!-- <el-button type="info" size="mini" plain>{{totalData[0].scenicName}}</el-button> -->
+                <!-- <el-button type="info" size="mini" plain></el-button> -->
                 <div size="mini" class="totalCountDiv">{{formatTime1+' —— '+formatTime2}}</div>
                 <div size="mini" class="totalCountDiv">交易总计</div>
-                <el-button type="info" size="mini" plain>{{totalData[0].incomeMoney+"元"}}</el-button>
-                <el-button type="info" size="mini" plain>{{totalData[0].salesTicketNum+"笔"}}</el-button>
+                <el-button type="info" size="mini" plain>{{totalData.lastMoneyTotal+"元"}}</el-button>
+                <el-button type="info" size="mini" plain>{{totalData.normalSettleCount+"笔"}}</el-button>
               </el-col>
             </el-row>
           </template>
-          <el-table-column type="index" width="40" align="center"></el-table-column>
-          <el-table-column prop="cardNo" label="卡号" style="width: 15%" align="center"></el-table-column>
-          <el-table-column prop="settleTime" label="交易时间" style="width: 15%" align="center"></el-table-column>
-          <el-table-column prop="tradeSerialNo" label="交易流水号" style="width: 15%" align="center"></el-table-column>
-          <el-table-column prop="orderNo" label="订单号" style="width: 15%" align="center"></el-table-column>
-          <!-- <el-table-column prop="orderSource" label="来源" style="width: 10%" align="center"></el-table-column> -->
-          <el-table-column prop="ticketName" label="票名称" style="width: 15%" align="center"></el-table-column>
-          <el-table-column prop="scenicName" label="景区名称" style="width: 15%" align="center"></el-table-column>
-          <!-- <el-table-column prop="h" label="有效票" width="60" align="center"></el-table-column> -->
-          <el-table-column prop="salesTicketNum" label="已购票" width="60" align="center"></el-table-column>
-          <el-table-column prop="ticketTotalPrice" label="金额" width="60" align="center"></el-table-column>
+          <el-table-column type="index" width="40" align="center" ></el-table-column>
+          <el-table-column prop="parkingName" label="停车场" style="width: 20%" align="center"></el-table-column>
+          <el-table-column prop="orderNo" label="订单号" style="width: 20%" align="center" ></el-table-column>
+          <el-table-column prop="finallyTime" label="订单完成时间" style="width: 20%" align="center"></el-table-column>
+          <el-table-column prop="carNo" label="车牌号" style="width: 20%" align="center"></el-table-column>
+          <el-table-column prop="lastMoney" label="结算金额" style="width: 20%" align="center"></el-table-column>
         </el-table-column>
       </el-table-column>
     </el-table>
@@ -79,27 +74,21 @@
 </template>
 
 <script>
-// import { mapState, mapMutations } from "vuex";
 import { mapActions } from "vuex";
-import tools from '../../core/tools'
+
 export default {
-  name: "report1Detail",
+  name: "parking",
   data() {
     return {
       winHeight: document.documentElement.clientHeight - 80,
       winWidth: document.documentElement.clientWidth,
       radio: 1,
-      totalData: [
-        {
-          discMoney: "",
-          incomeMoney: "",
-          origMoney: "",
-          salesTicketNum: "",
-          scenicName: "",
-          transactionTime: ""
-        }
+      totalData:{
+          lastMoneyTotal:"",
+          normalSettleCount: ""
+      },
+      tableData: [
       ],
-      tableData: [],
       timePickerDisabled: true,
       pickerOptions: {
         shortcuts: [
@@ -144,18 +133,44 @@ export default {
       input: ""
     };
   },
-  computed: {
-    // ...mapState("report2", {
-    //   num: state => state.count
-    // }),
-  },
+  computed: {},
   methods: {
-    ...mapActions("report1", {
-      scenicBusinessDetail: "scenicBusinessDetail",
-      scenicBusinessTotal: "scenicBusinessTotal"
+    ...mapActions("parking", {
+      getParkingDetails: "getParkingDetails",
+      getParkingTotal: "getParkingTotal"
     }),
-    goBack() {
-      this.$router.go(-1);
+    queryData() {
+      this.$options.methods.handleParkBusinessInfo.bind(this)({
+        endDate: "",
+        endTime: 0,
+        limit: 0,
+        orderSource: "",
+        page: 0,
+        startDate: "",
+        startTime: 0,
+        whetherTotal: true
+      });
+    },
+    handleParkBusinessInfo(paramDic) {
+      this.getParkingDetails(paramDic)
+        .then(res => {
+          console.log(res);
+          this.totalPage = res.data["total"];
+          this.tableData = res.data["list"]
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    handleGetParkingTotal(paramDic){
+      this.getParkingTotal(paramDic)
+        .then(res => {
+          console.log(res);
+          this.totalData = res.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     //设置本月时间
     initTime() {
@@ -225,43 +240,6 @@ export default {
           break;
       }
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-      this.currentPage = 1;
-      this.pageSize = val;
-      this.$options.methods.queryDetailData.bind(this)();
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.currentPage = val;
-      this.$options.methods.queryDetailData.bind(this)();
-    },
-    handleScenicBusinessDetail(paramDic) {
-      this.scenicBusinessDetail(paramDic)
-        .then(res => {
-          this.totalPage = res.data["total"];
-          this.tableData = res.data["list"];
-          this.tableData.map(function(val){
-            if (val.orderSource ==2) {
-              val.orderSource = "闸机";
-            }
-          });
-          console.log(res.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    handleScenicBusinessTotal(paramDic) {
-      this.scenicBusinessTotal(paramDic)
-        .then(res => {
-          console.log(res);
-          this.totalData = res.data;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
     queryData() {
       console.log("11111");
       this.formatTime1 = this.$options.methods.formatDate.bind(this)(
@@ -276,26 +254,40 @@ export default {
       this.$options.methods.queryDetailData.bind(this)();
     },
     queryTotalData() {
-      this.$options.methods.handleScenicBusinessTotal.bind(this)({
+      this.$options.methods.handleGetParkingTotal.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
-        scenicId:"2002",
+        parkingId:"8D7B917E",
         page: 1,
         limit: 50
       });
     },
     queryDetailData(){
-      console.log("scenicId:"+localStorage.getItem("scenicId"))
-      this.$options.methods.handleScenicBusinessDetail.bind(this)({
+      this.$options.methods.handleParkBusinessInfo.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
-        scenicId:"2002",
+        parkingId:"8D7B917E",
         page: this.currentPage,
         limit: this.pageSize
       })
+    },
+    goBack() {
+      
+      this.$router.go(-1);
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.currentPage = 1;
+      this.pageSize = val;
+      this.$options.methods.queryDetailData.bind(this)();
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.$options.methods.queryDetailData.bind(this)();
     }
   },
-  beforeMount() {},
+
   mounted() {
     window.onresize = () => {
       this.winHeight = document.documentElement.clientHeight;
