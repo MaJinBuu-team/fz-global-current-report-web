@@ -75,9 +75,10 @@
 
 <script>
 import { mapActions } from "vuex";
+import Cookies from 'js-cookie'
 
 export default {
-  name: "parking",
+  name: "Parking",
   data() {
     return {
       winHeight: document.documentElement.clientHeight - 80,
@@ -257,7 +258,7 @@ export default {
       this.$options.methods.handleGetParkingTotal.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
-        parkingId:"8D7B917E",
+        parkingId:Cookies.get("fzreport_web_parkId"),
         page: 1,
         limit: 50
       });
@@ -266,7 +267,7 @@ export default {
       this.$options.methods.handleParkBusinessInfo.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
-        parkingId:"8D7B917E",
+        parkingId:Cookies.get("fzreport_web_parkId"),
         page: this.currentPage,
         limit: this.pageSize
       })

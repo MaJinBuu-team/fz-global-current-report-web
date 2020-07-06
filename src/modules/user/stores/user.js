@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import { login, logout } from '@/modules/api/user'
 import { getToken, setToken, removeToken } from '@/modules/core/auth'
 import { resetRouter } from '@/router'
@@ -35,9 +36,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ loginName: username.trim(), loginPwd: password }).then(response => {
         const { data } = response
+
+        console.log(data.user.parkId)
         commit('SET_TOKEN', data.token)
-        localStorage.setItem("parkId",JSON.stringify(response.parkId))
-        localStorage.setItem("scenicId",JSON.stringify(response.scenicId))
+        Cookies.set("fzreport_web_parkId", data.user.parkId)
+        Cookies.set("fzreport_web_scenicId", data.user.scenicId)
         console.log("登录返回"+JSON.stringify(data));
         setToken(data.token)
         console.log('存储的token=='+data.token);
@@ -75,6 +78,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
+        Cookies.remove("fzreport_web_parkId")
+        Cookies.remove("fzreport_web_scenicId")
         resetRouter()
         commit('RESET_STATE')
         resolve()

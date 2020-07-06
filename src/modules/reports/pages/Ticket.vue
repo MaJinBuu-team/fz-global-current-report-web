@@ -82,8 +82,10 @@
 // import { mapState, mapMutations } from "vuex";
 import { mapActions } from "vuex";
 import tools from '../../core/tools'
+import Cookies from 'js-cookie'
+
 export default {
-  name: "ticket",
+  name: "Ticket",
   data() {
     return {
       winHeight: document.documentElement.clientHeight - 80,
@@ -279,7 +281,7 @@ export default {
       this.$options.methods.handleScenicBusinessTotal.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
-        scenicId:"2002",
+        scenicId:Cookies.get("fzreport_web_scenicId"),
         page: 1,
         limit: 50
       });
@@ -289,7 +291,7 @@ export default {
       this.$options.methods.handleScenicBusinessDetail.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
-        scenicId:"2002",
+        scenicId:Cookies.get("fzreport_web_scenicId"),
         page: this.currentPage,
         limit: this.pageSize
       })
