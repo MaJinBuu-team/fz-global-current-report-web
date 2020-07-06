@@ -255,6 +255,10 @@ export default {
       this.$options.methods.queryDetailData.bind(this)();
     },
     queryTotalData() {
+      console.log('当前选中类型:'+this.radio);
+      if (this.radio==3) {
+        this.value2 = this.value2+86400000-1;
+      }
       this.$options.methods.handleGetParkingTotal.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
@@ -264,6 +268,7 @@ export default {
       });
     },
     queryDetailData(){
+      console.log('当前选中类型:'+this.radio);
       this.$options.methods.handleParkBusinessInfo.bind(this)({
         startTime: this.value1,
         endTime: this.value2,

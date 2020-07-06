@@ -278,6 +278,9 @@ export default {
       this.$options.methods.queryDetailData.bind(this)();
     },
     queryTotalData() {
+      if (this.radio==3) {
+        this.value2 = this.value2+86400000-1;
+      }
       this.$options.methods.handleScenicBusinessTotal.bind(this)({
         startTime: this.value1,
         endTime: this.value2,
